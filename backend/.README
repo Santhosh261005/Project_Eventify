@@ -1,0 +1,4 @@
+// Mr.Vignesh please install the dependencies using `npm install` or `yarn install`
+// Set up the environment variables in a `.env` file
+// with `MONGO_URI` for MongoDB connection  
+// and `PORT` for the server port.
