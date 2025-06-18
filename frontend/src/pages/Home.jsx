@@ -1,23 +1,24 @@
-import React from 'react';
-import Hero from '../components/Hero';
-import SearchBar from '../components/SearchBar';
-import Filters from '../components/Filters';
-import EventList from '../components/EventList';
+import { useEffect, useState } from 'react';
 
-const Home = () => {
+export default function Home() {
+  const [userName, setUserName] = useState('');
+
+  useEffect(() => {
+    // Assuming user info is stored in localStorage after login
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (user && user.name) {
+      setUserName(user.name);
+    }
+  }, []);
+
   return (
-    <div>
-      <Hero />
-      <SearchBar />
-      <div className="flex flex-col sm:flex-row gap-4 px-6 py-10">
-        <Filters />
-        <div className="flex-1">
-          <h2 className="text-2xl font-bold mb-4">Upcoming Events</h2>
-          <EventList />
-        </div>
-      </div>
+    <div className="container mx-auto p-4">
+      {userName ? (
+        <h1 className="text-2xl font-bold">Hello {userName}</h1>
+      ) : (
+        <h1 className="text-2xl font-bold">Welcome to Eventify</h1>
+      )}
+      {/* Rest of the home page content */}
     </div>
   );
-};
-
-export default Home;
+}

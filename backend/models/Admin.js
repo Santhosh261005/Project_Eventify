@@ -1,35 +1,31 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
-const userSchema = new mongoose.Schema({
+const organizerSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
     trim: true
   },
-  mobileNumber: {
+  email: {
     type: String,
     required: true,
     unique: true,
-    trim: true
+    trim: true,
+    lowercase: true
   },
   password: {
     type: String,
     required: true
   },
-  interests: {
-    type: [String],
-    default: []
-  },
-  role: {
-    type: String,
-    enum: ['user', 'organiser'],
-    default: 'user'
+  createdAt: {
+    type: Date,
+    default: Date.now
   }
 });
 
 // Hash password before saving
-userSchema.pre('save', async function(next) {
+organizerSchema.pre('save', async function(next) {
   if (!this.isModified('password')) {
     return next();
   }
@@ -39,10 +35,10 @@ userSchema.pre('save', async function(next) {
 });
 
 // Method to compare password
-userSchema.methods.matchPassword = async function(enteredPassword) {
+organizerSchema.methods.matchPassword = async function(enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-const User = mongoose.model('User', userSchema);
+const Organizer = mongoose.model('Organizer', organizerSchema);
 
-module.exports = User;
+module.exports = Organizer;

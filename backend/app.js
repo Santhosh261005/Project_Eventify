@@ -4,12 +4,22 @@ const app = express();
 const connectDB = require('./config/db');
 require('dotenv').config();
 
+const cors = require('cors');
+
+// Enable CORS
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true, // optional, only if you use cookies/auth headers
+}));
+
 // middleware
 
 app.use(express.json());
 
 // routes
 
+const authRoutes = require('./routes/authRoutes');
+app.use('/api/auth', authRoutes);
 
 const port = process.env.PORT || 5000;
 

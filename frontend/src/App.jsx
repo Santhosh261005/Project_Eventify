@@ -213,7 +213,16 @@ function App() {
       {showLoginModal && (
         <LoginModal 
           onClose={() => setShowLoginModal(false)} 
-          onLogin={handleLogin}
+          setUser={(user) => {
+            handleLogin();
+            if (user.role === 'organiser') {
+              // Redirect organiser to organiser dashboard
+              window.location.href = '/organizerDashboard';
+            } else {
+              // For user, stay on home page and store user info
+              localStorage.setItem('user', JSON.stringify(user));
+            }
+          }}
         />
       )}
 
