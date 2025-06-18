@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+
 import Header from './components/Header';
 import HeroSection from './components/HeroSection';
 import EventCard from './components/EventCard';
@@ -18,87 +19,49 @@ function App() {
     priceRange: 'all'
   });
 
-  // Sample event data
-  const [events, setEvents] = useState([
-    {
-      id: 1,
-      title: 'Tech Innovators Conference 2024',
-      description: 'Annual gathering of tech leaders and innovators showcasing the latest advancements',
-      date: '2024-12-28T10:00:00',
-      location: 'San Francisco, CA',
-      category: 'technology',
-      eventType: 'in-person',
-      price: 0,
-      attendees: 245,
-      organizer: 'TechCorp',
-      image: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
-    },
-    {
-      id: 2,
-      title: 'Startup Networking Mixer',
-      description: 'Connect with fellow entrepreneurs and investors in a casual setting',
-      date: '2024-12-30T18:00:00',
-      location: 'Austin, TX',
-      category: 'networking',
-      eventType: 'in-person',
-      price: 20,
-      attendees: 89,
-      organizer: 'StartupHub',
-      image: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
-    },
-    {
-      id: 3,
-      title: 'Digital Marketing Masterclass',
-      description: 'Learn advanced digital marketing strategies from industry experts',
-      date: '2025-01-05T14:00:00',
-      location: 'Virtual Event',
-      category: 'education',
-      eventType: 'virtual',
-      price: 49,
-      attendees: 156,
-      organizer: 'MarketPro',
-      image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
-    },
-    {
-      id: 4,
-      title: 'Community Volunteer Day',
-      description: 'Join us for a day of giving back to our local community',
-      date: '2025-01-10T09:00:00',
-      location: 'Central Park, NY',
-      category: 'community',
-      eventType: 'in-person',
-      price: 0,
-      attendees: 320,
-      organizer: 'City Volunteers',
-      image: 'https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
-    },
-    {
-      id: 5,
-      title: 'Gaming Tournament Finals',
-      description: 'Watch the finals of our annual gaming championship',
-      date: '2025-01-15T12:00:00',
-      location: 'Los Angeles, CA',
-      category: 'gaming',
-      eventType: 'hybrid',
-      price: 25,
-      attendees: 180,
-      organizer: 'GameZone',
-      image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
-    },
-    {
-      id: 6,
-      title: 'Travel Photography Workshop',
-      description: 'Learn how to capture stunning travel photos from professionals',
-      date: '2025-01-20T11:00:00',
-      location: 'Miami, FL',
-      category: 'travel',
-      eventType: 'in-person',
-      price: 75,
-      attendees: 42,
-      organizer: 'WanderLens',
-      image: 'https://images.unsplash.com/photo-1506929562872-bb421503ef21?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
-    }
-  ]);
+  const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/events');
+        if (!response.ok) {
+          throw new Error('Failed to fetch events');
+        }
+        const data = await response.json();
+
+        // Helper function to get image URL based on event description keywords
+        const getImageUrl = (description) => {
+          const desc = description.toLowerCase();
+          if (desc.includes('tech') || desc.includes('developer') || desc.includes('startup')) {
+            return 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1350&q=80';
+          } else if (desc.includes('marketing') || desc.includes('business')) {
+            return 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1350&q=80';
+          } else if (desc.includes('community') || desc.includes('volunteer')) {
+            return 'https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&w=1350&q=80';
+          } else if (desc.includes('gaming') || desc.includes('tournament')) {
+            return 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1350&q=80';
+          } else if (desc.includes('travel') || desc.includes('photography')) {
+            return 'https://images.unsplash.com/photo-1506929562872-bb421503ef21?auto=format&fit=crop&w=1350&q=80';
+          } else {
+            return 'https://images.unsplash.com/photo-1505373877841-8d25f7d46678?auto=format&fit=crop&w=1350&q=80';
+          }
+        };
+
+        // Map events to add dynamic image URLs
+        const eventsWithImages = data.map(event => ({
+          ...event,
+          image: getImageUrl(event.description)
+        }));
+
+        setEvents(eventsWithImages);
+      } catch (error) {
+        console.error('Error fetching events:', error);
+      }
+    };
+
+    fetchEvents();
+  }, []);
 
   const handleLogin = () => {
     setIsLoggedIn(true);
