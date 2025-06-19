@@ -1,35 +1,27 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Routes, Route, Navigate } from 'react-router-dom';
+import OrganizerSignup from './components/OrganizerSignup';
+import OrganizerSignin from './components/OrganizerSignin';
+import OrganizerDashboard from './components/OrganizerDashboard';
+import Home from './components/Home';
+import EventForm from './components/EventForm';
+import { useAuth } from './context/AuthContext';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const { token } = useAuth();
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/organizer/signup" element={<OrganizerSignup />} />
+      <Route path="/organizer/signin" element={<OrganizerSignin />} />
+      <Route
+        path="/organizer/dashboard"
+        element={token ? <OrganizerDashboard /> : <Navigate to="/organizer/signin" />}
+      />
+        <Route path="/organizer/events/new" element={<EventForm />} />
+          <Route path="/organizer/events/:id" element={<EventForm />} />
+    </Routes>
+  );
 }
 
-export default App
+export default App;
