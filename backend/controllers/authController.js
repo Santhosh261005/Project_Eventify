@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
-const Organizer = require('../models/Admin');
+const Organizer = require('../models/Organizer');
 require('dotenv').config();
 
 const generateToken = (id, role) => {
