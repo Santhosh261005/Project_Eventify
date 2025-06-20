@@ -12,7 +12,7 @@ const generateToken = (id, role) => {
 // User signup
 exports.userSignup = async (req, res) => {
   const { name, mobileNumber, password, interests, role } = req.body;
-  console.log({ name, mobileNumber, password, interests, role })
+  // console.log({ name, mobileNumber, password, interests, role })
 
   try {
     const userExists = await User.findOne({ mobileNumber });

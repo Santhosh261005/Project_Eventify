@@ -6,7 +6,7 @@ export default function OrganizeEventModal({ onClose, onSubmit }) {
     description: '',
     date: '',
     location: '',
-    category: 'technology'
+    status: 'scheduled',
   });
 
   const categories = [
@@ -17,6 +17,8 @@ export default function OrganizeEventModal({ onClose, onSubmit }) {
     'business',
     'health'
   ];
+
+  const statuses = ['scheduled', 'cancelled', 'completed'];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -105,6 +107,26 @@ export default function OrganizeEventModal({ onClose, onSubmit }) {
                 {categories.map(category => (
                   <option key={category} value={category} className="capitalize">
                     {category}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-gray-700 mb-2" htmlFor="status">
+                Status
+              </label>
+              <select
+                id="status"
+                name="status"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                value={formData.status}
+                onChange={handleChange}
+                required
+              >
+                {statuses.map(status => (
+                  <option key={status} value={status} className="capitalize">
+                    {status}
                   </option>
                 ))}
               </select>

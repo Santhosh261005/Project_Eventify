@@ -11,6 +11,7 @@ function App() {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showOrganizeModal, setShowOrganizeModal] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('date');
   const [filters, setFilters] = useState({
@@ -61,6 +62,13 @@ function App() {
     };
 
     fetchEvents();
+
+    // Initialize user from localStorage
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+      setIsLoggedIn(true);
+    }
   }, []);
 
   const handleLogin = () => {
@@ -70,6 +78,9 @@ function App() {
 
   const handleLogout = () => {
     setIsLoggedIn(false);
+    setUser(null);
+    localStorage.removeItem('jwtToken');
+    localStorage.removeItem('user');
   };
 
   const handleAddEvent = (newEvent) => {
@@ -77,7 +88,22 @@ function App() {
       ...newEvent,
       id: events.length + 1,
       attendees: 0,
-      image: 'https://images.unsplash.com/photo-1505373877841-8d25f7d46678?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
+      image: (() => {
+        const desc = newEvent.description.toLowerCase();
+        if (desc.includes('tech') || desc.includes('developer') || desc.includes('startup')) {
+          return 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1350&q=80';
+        } else if (desc.includes('marketing') || desc.includes('business')) {
+          return 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1350&q=80';
+        } else if (desc.includes('community') || desc.includes('volunteer')) {
+          return 'https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&w=1350&q=80';
+        } else if (desc.includes('gaming') || desc.includes('tournament')) {
+          return 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1350&q=80';
+        } else if (desc.includes('travel') || desc.includes('photography')) {
+          return 'https://images.unsplash.com/photo-1506929562872-bb421503ef21?auto=format&fit=crop&w=1350&q=80';
+        } else {
+          return 'https://images.unsplash.com/photo-1505373877841-8d25f7d46678?auto=format&fit=crop&w=1350&q=80';
+        }
+      })()
     }]);
     setShowOrganizeModal(false);
   };
@@ -135,6 +161,7 @@ function App() {
     <div className="min-h-screen bg-gray-50">
       <Header 
         isLoggedIn={isLoggedIn} 
+        username={user ? user.name : ''}
         onLoginClick={() => setShowLoginModal(true)} 
         onLogoutClick={handleLogout}
         onOrganizeClick={() => setShowOrganizeModal(true)}
@@ -178,6 +205,7 @@ function App() {
           onClose={() => setShowLoginModal(false)} 
           setUser={(user) => {
             handleLogin();
+            setUser(user);
             if (user.role === 'organiser') {
               // Redirect organiser to organiser dashboard
               window.location.href = '/organizerDashboard';

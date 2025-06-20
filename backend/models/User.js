@@ -18,13 +18,11 @@ const userSchema = new mongoose.Schema({
     required: true
   },
   interests: {
-    type: [String],
-    default: []
+    type: [String]
   },
   role: {
     type: String,
-    enum: ['user', 'organiser'],
-    default: 'user'
+    enum: ['user', 'organiser']
   }
 });
 
