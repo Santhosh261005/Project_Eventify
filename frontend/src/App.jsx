@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { useState, useEffect } from 'react';
 
 import Header from './components/Header';
@@ -7,6 +6,13 @@ import EventCard from './components/EventCard';
 import FilterSection from './components/FilterSection';
 import LoginModal from './components/LoginModal';
 import OrganizeEventModal from './components/OrganizeEventModal';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import OrganizerSignup from './components/OrganizerSignup';
+import OrganizerSignin from './components/OrganizerSignin';
+import OrganizerDashboard from './components/OrganizerDashboard';
+// import Home from './components/Home';
+import EventForm from './components/EventForm';
+import { useAuth } from './context/AuthContext';
 
 function App() {
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -229,14 +235,7 @@ function App() {
 }
 
 export default App;
-=======
-import { Routes, Route, Navigate } from 'react-router-dom';
-import OrganizerSignup from './components/OrganizerSignup';
-import OrganizerSignin from './components/OrganizerSignin';
-import OrganizerDashboard from './components/OrganizerDashboard';
-import Home from './components/Home';
-import EventForm from './components/EventForm';
-import { useAuth } from './context/AuthContext';
+
 
 function App() {
   const { token } = useAuth();
@@ -257,4 +256,3 @@ function App() {
 }
 
 export default App;
->>>>>>> organizer
